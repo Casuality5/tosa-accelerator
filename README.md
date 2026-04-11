@@ -48,4 +48,22 @@ This module implements a 16-element vector dot product engine
 7. Resource heavy → 16 multipliers used simultaneously
 8. No normalization (not cosine similarity, only raw dot product)
 ===========================================================================================
+# 3. ReLU (DESIGN AND VERIFICATION STAGE) (ver 0.1)
 
+## OVERVIEW
+
+This module is pure combinational that receives a signed 32 bit value from PE accumulator and clips anyu negative value to zero.
+
+## ASSUMPTION
+
+1. Input is a signed 32-bit value representing a fully accumulated PE result — ReLU is not applied mid-accumulation
+2. Zero is treated as non-negative — input of 0 produces output of 0 (pass through)
+3. ReLU is instantiated once per PE — PE Array contains 256 ReLU instances, one per accumulator output
+
+## LIMITATION
+
+1. No support for Leaky ReLU or parametric variants — threshold is hardcoded to zero
+2. No valid/ready handshaking — downstream GAP module must know when to sample output
+3. Fixed 32-bit width — if PE accumulator width changes, ReLU width must be manually updated. Parameterization is a planned future improvement
+4. No saturation logic — if upstream PE accumulator overflows before reaching ReLU, result will be incorrect. Overflow prevention is PE Array's responsibility
+===========================================================================================
