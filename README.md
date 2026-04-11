@@ -67,3 +67,8 @@ This module is pure combinational that receives a signed 32 bit value from PE ac
 3. Fixed 32-bit width — if PE accumulator width changes, ReLU width must be manually updated. Parameterization is a planned future improvement
 4. No saturation logic — if upstream PE accumulator overflows before reaching ReLU, result will be incorrect. Overflow prevention is PE Array's responsibility
 ===========================================================================================
+# 4. ARRAY (DESIGN AND VERIFICATION) (ver 0.1)
+
+## OVERVIEW
+
+This module contains PE Array, ReLU and GAP
