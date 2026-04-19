@@ -1,0 +1,161 @@
+================================================================
+DVCon India 2026 - Stage 2A
+PLAN AND REQUIREMENTS
+================================================================
+
+DEADLINE: May 5th 2026
+RESULT ANNOUNCEMENT: May 20th 2026
+
+----------------------------------------------------------------
+WHAT WE ARE BUILDING
+----------------------------------------------------------------
+
+A Python program that:
+- Takes an image as input
+- Takes a task as input (one of 14 tasks)
+- Outputs the most suitable object in that image for that task
+
+Example:
+    input  -> image of a kitchen, task = "serve wine"
+    output -> "wine glass"
+
+Runs fully on CPU. No GPU needed. No hardware. No FPGA.
+That is all Stage 2A requires.
+
+----------------------------------------------------------------
+THE 14 TASKS (these are fixed, from the COCO-Tasks paper)
+----------------------------------------------------------------
+
+1.  step on something
+2.  sit comfortably
+3.  place flowers
+4.  get potatoes out of fire
+5.  water plant
+6.  get lemon out of tea
+7.  dig hole
+8.  open bottle of beer
+9.  open parcel
+10. serve wine
+11. pour sugar
+12. smear butter
+13. extinguish fire
+14. pound carpet
+
+----------------------------------------------------------------
+HOW THE PROGRAM WORKS (the pipeline)
+----------------------------------------------------------------
+
+STEP 1 - Object Detection
+    Use OWL-ViT (zero shot object detector from Google/HuggingFace)
+    Give it the image + a list of candidate object names for the task
+    It finds and draws bounding boxes around those objects
+    Unlike YOLO it is not limited to 80 classes
+    It can find anything you describe in text
+
+STEP 2 - Scoring with CLIP
+    For each detected object crop that region from the image
+    Feed the cropped image + task description to CLIP
+    CLIP gives a similarity score - how well does this object
+    match what is needed for the task
+    CLIP understands visual context not just label names
+
+STEP 3 - Pick best
+    Object with highest CLIP score wins
+    Print the label and bounding box
+
+----------------------------------------------------------------
+WHAT TO SUBMIT (3 things)
+----------------------------------------------------------------
+
+1. SOURCE CODE
+   - Single Python file
+   - Must run from command line like:
+     python tosa.py --image image.jpg --task "serve wine"
+   - Must work for all 14 tasks
+   - CPU only inference
+
+2. TWO PAGE REPORT
+   - Page 1: describe the approach (what pipeline, what models, why)
+   - Page 2: screenshots of results for the 14 tasks
+
+3. SHORT VIDEO
+   - Screen recording of the program running
+   - Show it working on a few tasks
+   - No specific length required
+
+----------------------------------------------------------------
+LIBRARIES NEEDED (install these first)
+----------------------------------------------------------------
+
+    pip install torch torchvision
+    pip install transformers
+    pip install Pillow
+    pip install openai-clip
+
+OR install all at once:
+    pip install torch torchvision transformers Pillow openai-clip
+
+Models that will auto-download on first run:
+    - OWL-ViT  (google/owlvit-base-patch32)  ~600 MB
+    - CLIP     (ViT-B/32)                    ~350 MB
+
+Download these on a good internet connection before sitting
+down to code so you are not waiting during development.
+
+To pre-download run this once:
+    python -c "from transformers import pipeline; pipeline('zero-shot-object-detection', model='google/owlvit-base-patch32')"
+    python -c "import clip; clip.load('ViT-B/32', device='cpu')"
+
+----------------------------------------------------------------
+WORK SPLIT
+----------------------------------------------------------------
+
+PERSON 1 (handles code):
+    - Write the Python pipeline using OWL-ViT + CLIP
+    - Test on all 14 tasks
+    - Fix whichever tasks give wrong output
+    - Estimated time: 4 to 6 hours across 2 to 3 days
+
+PERSON 2 (handles report + video):
+    - Write the 2 page report
+      Page 1: explain the approach in simple english
+              what is OWL-ViT, what is CLIP, how they work together
+      Page 2: take screenshots of the program output for all 14 tasks
+              paste them with task names and results shown
+    - Record a short screen recording video of the program running
+    - Estimated time: 3 to 4 hours
+
+Both can work in parallel once code is running on a few tasks.
+
+----------------------------------------------------------------
+ROUGH TIMELINE (working around exams)
+----------------------------------------------------------------
+
+DAY 1
+    - Install all libraries
+    - Download models on good internet
+    - Write basic pipeline, get it running on 2 to 3 tasks
+
+DAY 2
+    - Fix remaining tasks that give wrong output
+    - Finalize code and test all 14 tasks
+    - Person 2 starts writing report Page 1
+
+DAY 3
+    - Take screenshots of all 14 results for report Page 2
+    - Record video
+    - Final check and submit
+
+----------------------------------------------------------------
+NOTES
+----------------------------------------------------------------
+
+- No restriction on libraries mentioned in contest documents
+- Prof. Vivek said submit even if incomplete, they evaluate
+  all progress made
+- Hardware and FPGA is NOT required for Stage 2A
+- Stage 2A is purely software
+- Any programming language is allowed, we are using Python
+- Google Colab is also allowed if local setup has issues
+
+================================================================
